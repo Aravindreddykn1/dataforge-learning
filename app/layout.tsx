@@ -1,6 +1,10 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import './glass.css';
+import './evaluation.css';
+import './interview.css';
+import './mastery.css';
+import './leaderboard.css';
 import AICoach from '@/components/ai-coach';
 
 export const metadata: Metadata = {
