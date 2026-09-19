@@ -44,7 +44,12 @@ For a short URL, rename the Vercel project to a short slug such as `df-learn` or
 - Responsive dashboard, daily plan, mastery, projects, and analytics surfaces
 - Authenticated sign-in and account creation
 - Email-based password recovery and password update
+- Server-side AI Coach evaluations using OpenAI, with structured strengths, weak signals, and next actions
 - Adaptive daily-test interaction
 - Prisma schema foundation for users, tests, attempts, mastery, XP, and study sessions
 
 The original dependency-free prototype remains in `index.html`, `styles.css`, and `app.js` as a local fallback reference. The deployable entry point is the Next.js `app/` directory.
+
+## AI Coach setup
+
+Add `OPENAI_API_KEY` to `.env.local` locally and to Vercel Environment Variables. The key is only read by `/api/coach/evaluate` on the server and is never sent to browser JavaScript. Optionally set `OPENAI_MODEL`; it defaults to `gpt-4o-mini`.
