@@ -2,9 +2,10 @@ export type MasteryQuestion = { prompt: string; explanation: string; example: st
 export type MasteryTopic = { name: string; subtopics: string[]; questions: MasteryQuestion[] };
 
 const q = (prompt: string, explanation: string, example: string): MasteryQuestion => ({ prompt, explanation, example });
+const generated = (topic: string, subtopics: string[]): MasteryQuestion[] => subtopics.slice(0, 10).map((subtopic, index) => q(`Practice ${topic}: ${subtopic}. Explain the concept and solve one realistic data problem.`, `${subtopic} is a core ${topic} building block; use it deliberately, validate edge cases, and explain the trade-off.`, `Example ${index + 1}: apply ${subtopic} to a small production-style ${topic} task and verify the output.`));
 
 export const masteryCurriculum: MasteryTopic[] = [
-  { name: 'SQL', subtopics: ['Joins', 'CTEs', 'Window functions', 'Query optimization'], questions: [
+  { name: 'SQL', subtopics: ['SELECT and aliases', 'WHERE and predicates', 'ORDER BY and LIMIT', 'GROUP BY and aggregates', 'HAVING', 'INNER and OUTER JOINs', 'Subqueries', 'CTEs', 'CASE and NULLs', 'Window functions', 'Set operations', 'Date and string functions', 'Transactions', 'Indexes', 'Execution plans', 'Query optimization'], questions: [
     q('Find the top three products by revenue.', 'Aggregate revenue, rank within the result, then keep ranks 1 to 3.', 'SUM(amount) with DENSE_RANK() OVER (ORDER BY revenue DESC).'),
     q('Find duplicate customer records while keeping the latest.', 'Partition by the business key and order by the newest timestamp.', 'ROW_NUMBER() OVER (PARTITION BY email ORDER BY updated_at DESC).'),
     q('Explain ROW_NUMBER versus DENSE_RANK.', 'ROW_NUMBER is unique; DENSE_RANK keeps equal values at the same rank without gaps.', 'Scores 100, 100, 90 become row numbers 1,2,3 but dense ranks 1,1,2.'),
@@ -16,7 +17,7 @@ export const masteryCurriculum: MasteryTopic[] = [
     q('Find the second-highest salary per department.', 'Rank inside each department and filter the desired rank.', 'DENSE_RANK() OVER (PARTITION BY department_id ORDER BY salary DESC).'),
     q('Make an incremental query rerunnable.', 'Use a stable watermark and an idempotent merge key rather than blind append.', 'WHERE updated_at >= :last_watermark followed by MERGE on order_id.'),
   ]},
-  { name: 'Python', subtopics: ['Data structures', 'Functions', 'Exceptions', 'JSON and APIs'], questions: [
+  { name: 'Python', subtopics: ['Syntax and variables', 'Strings and numbers', 'Lists, tuples, sets', 'Dictionaries', 'Control flow', 'Functions and scope', 'Comprehensions', 'Modules and packages', 'Exceptions', 'Files and paths', 'JSON and APIs', 'Logging', 'Testing', 'Typing', 'Generators', 'OOP and design patterns', 'Concurrency', 'Packaging and deployment'], questions: [
     q('Count event types in a list of dictionaries.', 'A dictionary accumulator gives O(n) time and handles new event types.', 'counts[event["type"]] = counts.get(event["type"], 0) + 1.'),
     q('Write a generator for a large file.', 'Yield one parsed record at a time so memory stays bounded.', 'def rows(path):\n  for line in open(path): yield json.loads(line)'),
     q('Flatten nested JSON safely.', 'Read optional keys with defaults and validate types before transformation.', 'event.get("user", {}).get("id") or "unknown".'),
@@ -28,7 +29,7 @@ export const masteryCurriculum: MasteryTopic[] = [
     q('Validate a configuration before a job runs.', 'Fail early with clear messages instead of discovering missing settings mid-pipeline.', 'required = ["BUCKET", "REGION"]; missing = [x for x in required if not os.getenv(x)].'),
     q('Explain shallow versus deep copy.', 'A shallow copy shares nested objects; a deep copy recursively duplicates them.', 'copy.deepcopy(config) prevents nested mutation leaks.'),
   ]},
-  { name: 'Pandas', subtopics: ['Cleaning', 'Merge and join', 'Groupby', 'Time series'], questions: [
+  { name: 'Pandas', subtopics: ['Series and DataFrame', 'Indexing and selection', 'Dtypes', 'Missing values', 'Duplicates', 'String operations', 'Merge and join', 'Groupby and aggregation', 'Pivot and reshape', 'Time series', 'Window calculations', 'Categoricals', 'Performance', 'Large-file processing'], questions: [
     q('Handle missing customer IDs without losing auditability.', 'Separate invalid rows, record the reason, and only clean valid rows.', 'bad = df[df.customer_id.isna()].assign(error="missing_customer_id").'),
     q('Join orders to customers.', 'Use merge with explicit validation to catch unexpected cardinality.', 'orders.merge(customers, on="customer_id", how="left", validate="many_to_one").'),
     q('Detect duplicate records.', 'Use duplicated on the natural key and keep all copies for review.', 'df[df.duplicated(["customer_id", "order_date"], keep=False)].'),
@@ -40,7 +41,7 @@ export const masteryCurriculum: MasteryTopic[] = [
     q('Create a monthly time series.', 'Set a datetime index and resample with a defined aggregation.', 'df.set_index("date").amount.resample("MS").sum().'),
     q('Explain apply performance trade-offs.', 'Vectorized operations are usually faster and clearer than row-wise apply.', 'df["total"] = df.price * df.quantity instead of apply(axis=1).'),
   ]},
-  { name: 'Analytics', subtopics: ['KPIs', 'EDA', 'Correlation', 'Experiment design'], questions: [
+  { name: 'Analytics', subtopics: ['Business questions', 'Metric definitions', 'Data validation', 'Descriptive statistics', 'EDA', 'Segmentation', 'Correlation', 'Cohorts and retention', 'Funnel analysis', 'Experiment design', 'Confidence intervals', 'Forecasting', 'Data storytelling'], questions: [
     q('Diagnose a sudden metric drop.', 'Check definition, data freshness, segments, denominator, and upstream changes.', 'Compare yesterday by region and verify row counts first.'),
     q('Choose a north-star metric.', 'Tie it to durable user or business value, not a shallow activity count.', 'Repeat purchase rate is stronger than raw page views for commerce.'),
     q('Explain correlation versus causation.', 'Correlation measures association; experiments or strong design are needed for causation.', 'Ad spend and sales can correlate because seasonality drives both.'),
@@ -52,7 +53,7 @@ export const masteryCurriculum: MasteryTopic[] = [
     q('Choose a chart for a trend.', 'A line chart shows change over ordered time; avoid pie charts for long series.', 'Daily active users over 12 weeks uses a line chart.'),
     q('Explain Simpson’s paradox.', 'An aggregate trend can reverse after splitting by a confounding group.', 'Overall conversion rises while conversion falls in every traffic channel.'),
   ]},
-  { name: 'Data Warehousing', subtopics: ['Star schema', 'SCD Type 1', 'SCD Type 2', 'Fact and dimension design'], questions: [
+  { name: 'Data Warehousing', subtopics: ['OLTP vs OLAP', 'Warehouse layers', 'Grain', 'Facts and dimensions', 'Star schema', 'Snowflake schema', 'Surrogate keys', 'SCD Type 1', 'SCD Type 2', 'Late-arriving data', 'Conformed dimensions', 'Date dimensions', 'Partitioning', 'Clustering', 'Security and governance'], questions: [
     q('Design a sales star schema.', 'Put measurable events in a fact and descriptive entities in dimensions.', 'fact_sales joins dim_customer, dim_product, and dim_date.'),
     q('Implement SCD Type 1.', 'Overwrite the dimension value when history is not required.', 'UPDATE dim_customer SET city = new_city WHERE customer_key = ...'),
     q('Implement SCD Type 2.', 'Expire the old row and insert a new version with effective dates.', 'is_current=false, valid_to=load_time; then insert is_current=true.'),
@@ -64,7 +65,7 @@ export const masteryCurriculum: MasteryTopic[] = [
     q('Prevent duplicate fact loads.', 'Use a natural event key, load audit, and idempotent merge.', 'MERGE on source_system + event_id.'),
     q('Partition a warehouse table.', 'Partition by a common filter such as event date while avoiding tiny partitions.', 'PARTITION BY RANGE (event_date) monthly.'),
   ]},
-  { name: 'PySpark', subtopics: ['DataFrames', 'Joins', 'Windows', 'Partitions and shuffle'], questions: [
+  { name: 'PySpark', subtopics: ['Spark architecture', 'DataFrames and schemas', 'select and expressions', 'filter and withColumn', 'Aggregations', 'Joins', 'Window functions', 'Nulls and duplicates', 'Spark SQL', 'Partitions', 'Repartition and coalesce', 'Shuffle', 'Broadcast joins', 'Caching', 'Skew', 'Structured Streaming', 'Performance tuning'], questions: [
     q('Optimize a broadcast join.', 'Broadcast only a dimension that fits executor memory to avoid a large-side shuffle.', 'events.join(broadcast(customers), "customer_id").'),
     q('Deduplicate with a window.', 'Rank records per key and keep the deterministic first row.', 'row_number over partitionBy(key).orderBy(desc(updated_at)).'),
     q('Diagnose a slow Spark job.', 'Inspect stages, shuffle read, spill, skew, input size, and executor health.', 'Spark UI shows one task taking 10x longer than peers.'),
@@ -76,7 +77,7 @@ export const masteryCurriculum: MasteryTopic[] = [
     q('Write a safe aggregation.', 'Select needed columns, filter early, and aggregate at the required grain.', 'events.filter(col("date") >= cutoff).groupBy("region").sum("amount").'),
     q('Optimize small files.', 'Control output partitions and compact files so downstream reads are efficient.', 'coalesce before write, then periodic compaction.'),
   ]},
-  { name: 'Databricks', subtopics: ['Delta Lake', 'Medallion architecture', 'Jobs', 'Optimization'], questions: [
+  { name: 'Databricks', subtopics: ['Workspace basics', 'Notebooks', 'Repos and Git', 'Clusters', 'Jobs and workflows', 'Parameters', 'Medallion architecture', 'Unity Catalog', 'Delta tables', 'MERGE and CDC', 'Time travel', 'OPTIMIZE and VACUUM', 'Photon and SQL warehouses', 'Monitoring and cost'], questions: [
     q('Build a bronze-to-silver flow.', 'Bronze preserves raw input; silver validates, cleans, and standardizes it.', 'Auto Loader writes bronze, then a silver table enforces types.'),
     q('Write an idempotent Delta MERGE.', 'Match on a stable business key and update or insert deterministically.', 'MERGE INTO gold USING updates ON gold.id=updates.id.'),
     q('Explain OPTIMIZE and VACUUM.', 'OPTIMIZE compacts files; VACUUM removes old files after retention safeguards.', 'OPTIMIZE gold ZORDER BY (customer_id); VACUUM gold.'),
@@ -88,7 +89,7 @@ export const masteryCurriculum: MasteryTopic[] = [
     q('Monitor a production notebook.', 'Capture duration, rows, failures, data quality, and cluster metrics.', 'send task metrics to an alert when row count drops 40%.'),
     q('Separate environments.', 'Use catalogs, schemas, permissions, and CI promotion between dev and prod.', 'dev_catalog.silver becomes prod_catalog.silver after validation.'),
   ]},
-  { name: 'Cloud', subtopics: ['S3', 'IAM', 'Glue', 'Monitoring'], questions: [
+  { name: 'Cloud', subtopics: ['Cloud fundamentals', 'AWS regions and accounts', 'S3 storage', 'IAM identities', 'Policies and least privilege', 'Glue catalog', 'Glue jobs', 'Lambda basics', 'Redshift basics', 'CloudWatch monitoring', 'Networking basics', 'Encryption and secrets', 'Cost controls'], questions: [
     q('Design an S3 data lake.', 'Use predictable prefixes, immutable raw data, lifecycle rules, and encryption.', 's3://lake/bronze/orders/ingest_date=2026-09-19/.'),
     q('Choose least-privilege access.', 'Grant only required actions on required resources and review them regularly.', 'Allow GetObject on one prefix instead of s3:* on the bucket.'),
     q('Monitor a failed pipeline.', 'Combine workflow logs, metrics, alarms, and correlation IDs to find the fault.', 'CloudWatch alarm on failed Glue runs pages the owner.'),
@@ -100,7 +101,7 @@ export const masteryCurriculum: MasteryTopic[] = [
     q('Build resilient batch storage.', 'Use versioned immutable landing files and manifests for complete batches.', 'manifest.json lists all files for batch_20260919.'),
     q('Explain infrastructure as code.', 'Declare cloud resources repeatably so changes are reviewed and reproducible.', 'Terraform creates the bucket, role, policy, and alarm.'),
   ]},
-  { name: 'Airflow', subtopics: ['DAGs', 'Scheduling', 'Retries', 'Backfill and sensors'], questions: [
+  { name: 'Airflow', subtopics: ['DAG structure', 'Tasks and dependencies', 'Operators', 'Scheduling', 'Data intervals', 'Retries', 'SLAs and alerts', 'XCom', 'Sensors', 'Deferrable tasks', 'Backfill', 'Pools and concurrency', 'Testing', 'Deployment and monitoring'], questions: [
     q('Make a DAG idempotent.', 'Tasks should write deterministic outputs or merge by a business key.', 'load_daily(date) replaces the partition rather than appending blindly.'),
     q('Plan a safe backfill.', 'Limit the date range, pause risky downstream actions, and validate each run.', 'backfill 2026-09-16 through 2026-09-18 after staging checks.'),
     q('Explain retry behavior.', 'Retries handle transient failures with delay and a bounded count.', 'retries=3, retry_delay=timedelta(minutes=10).'),
@@ -112,4 +113,11 @@ export const masteryCurriculum: MasteryTopic[] = [
     q('Prevent overlapping runs.', 'Use max_active_runs or a data interval lock when overlap is unsafe.', 'max_active_runs=1 for a non-idempotent legacy load.'),
     q('Test an Airflow DAG.', 'Parse it in CI and test task relationships, parameters, and key operators.', 'dag.test() verifies a local run with a fixed logical date.'),
   ]},
+  { name: 'Statistics', subtopics: ['Population and sample', 'Mean median mode', 'Variance and standard deviation', 'Probability', 'Distributions', 'Sampling', 'Confidence intervals', 'Hypothesis testing', 'Regression', 'A/B testing'], questions: generated('Statistics', ['Population and sample', 'Mean median mode', 'Variance and standard deviation', 'Probability', 'Distributions', 'Sampling', 'Confidence intervals', 'Hypothesis testing', 'Regression', 'A/B testing']) },
+  { name: 'Power BI', subtopics: ['Power Query', 'Data model relationships', 'Star schema', 'Calculated columns', 'Measures', 'DAX filter context', 'Time intelligence', 'Row-level security', 'Visual design', 'Deployment and refresh'], questions: generated('Power BI', ['Power Query', 'Data model relationships', 'Star schema', 'Calculated columns', 'Measures', 'DAX filter context', 'Time intelligence', 'Row-level security', 'Visual design', 'Deployment and refresh']) },
+  { name: 'Data Engineering', subtopics: ['Data lifecycle', 'Batch processing', 'Streaming', 'Data quality', 'Validation', 'Lineage', 'Governance', 'Idempotency', 'Observability', 'Scalability'], questions: generated('Data Engineering', ['Data lifecycle', 'Batch processing', 'Streaming', 'Data quality', 'Validation', 'Lineage', 'Governance', 'Idempotency', 'Observability', 'Scalability']) },
+  { name: 'ETL and ELT', subtopics: ['Extract patterns', 'API ingestion', 'File ingestion', 'Incremental loads', 'Full refresh', 'Transform layers', 'Load strategies', 'CDC', 'Error handling', 'Data contracts'], questions: generated('ETL and ELT', ['Extract patterns', 'API ingestion', 'File ingestion', 'Incremental loads', 'Full refresh', 'Transform layers', 'Load strategies', 'CDC', 'Error handling', 'Data contracts']) },
+  { name: 'Data Modeling', subtopics: ['Business process', 'Grain', 'Keys', 'Normalization', 'Denormalization', 'Dimensional modeling', 'Factless facts', 'Bridge tables', 'History', 'Semantic layer'], questions: generated('Data Modeling', ['Business process', 'Grain', 'Keys', 'Normalization', 'Denormalization', 'Dimensional modeling', 'Factless facts', 'Bridge tables', 'History', 'Semantic layer']) },
+  { name: 'Delta Lake', subtopics: ['ACID transactions', 'Delta tables', 'Schema enforcement', 'Schema evolution', 'MERGE', 'Change data feed', 'Time travel', 'Compaction', 'Retention', 'Concurrency'], questions: generated('Delta Lake', ['ACID transactions', 'Delta tables', 'Schema enforcement', 'Schema evolution', 'MERGE', 'Change data feed', 'Time travel', 'Compaction', 'Retention', 'Concurrency']) },
+  { name: 'System Design', subtopics: ['Requirements', 'Architecture', 'Storage choice', 'Processing choice', 'Partitioning', 'Reliability', 'Idempotency', 'Data quality', 'Monitoring', 'Cost and trade-offs'], questions: generated('System Design', ['Requirements', 'Architecture', 'Storage choice', 'Processing choice', 'Partitioning', 'Reliability', 'Idempotency', 'Data quality', 'Monitoring', 'Cost and trade-offs']) },
 ];

@@ -8,7 +8,7 @@ import { masteryCurriculum } from '@/lib/mastery-data';
 type Topic = { name: string; score: number };
 type Progress = { xp: number; streak: number; testsCompleted: number; topics: Topic[] };
 
-const initialTopics: Topic[] = ['SQL', 'Python', 'Pandas', 'Analytics', 'Data Warehousing', 'PySpark', 'Databricks', 'Cloud', 'Airflow'].map(name => ({ name, score: 0 }));
+const initialTopics: Topic[] = masteryCurriculum.map(item => ({ name: item.name, score: 0 }));
 const initialProgress: Progress = { xp: 0, streak: 0, testsCompleted: 0, topics: initialTopics };
 const plan = [
   { tag: 'START HERE', tone: 'red', name: 'SQL foundations', area: 'SQL', time: '20 min', reason: 'Build your first signal' },
