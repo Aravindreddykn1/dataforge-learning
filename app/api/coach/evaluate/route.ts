@@ -2,15 +2,15 @@ import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 
 const mastery = {
-  SQL: 82,
-  Python: 76,
-  Pandas: 68,
-  Analytics: 74,
-  'Data Warehousing': 52,
-  PySpark: 61,
-  Databricks: 67,
-  Cloud: 41,
-  Airflow: 35,
+  SQL: 0,
+  Python: 0,
+  Pandas: 0,
+  Analytics: 0,
+  'Data Warehousing': 0,
+  PySpark: 0,
+  Databricks: 0,
+  Cloud: 0,
+  Airflow: 0,
 };
 
 export async function POST(request: Request) {
