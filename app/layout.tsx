@@ -5,6 +5,9 @@ import './evaluation.css';
 import './interview.css';
 import './mastery.css';
 import './mastery-detail.css';
+import './mastery-action.css';
+import './practice.css';
+import './project-layout.css';
 import './leaderboard.css';
 import AICoach from '@/components/ai-coach';
 
