@@ -4,6 +4,7 @@ import './glass.css';
 import './evaluation.css';
 import './interview.css';
 import './mastery.css';
+import './mastery-detail.css';
 import './leaderboard.css';
 import AICoach from '@/components/ai-coach';
 
