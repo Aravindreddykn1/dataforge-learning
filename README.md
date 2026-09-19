@@ -46,9 +46,12 @@ For a short URL, rename the Vercel project to a short slug such as `df-learn` or
 - Email-based password recovery and password update
 - Server-side AI Coach evaluations using OpenAI, with structured strengths, weak signals, and next actions
 - Adaptive daily-test interaction
+- Beginner-to-advanced Topic Mastery curriculum across 16 domains with ten questions per topic
+- Topic-specific practice routes and relevant project tracks
+- Interview Intelligence source registry and Round Simulator
 - Prisma schema foundation for users, tests, attempts, mastery, XP, and study sessions
 
-The original dependency-free prototype remains in `index.html`, `styles.css`, and `app.js` as a local fallback reference. The deployable entry point is the Next.js `app/` directory.
+The deployable entry point is the Next.js `app/` directory. There is one supported application path; generated `.next`, dependency, and local tool folders are excluded from Git.
 
 ## AI Coach setup
 

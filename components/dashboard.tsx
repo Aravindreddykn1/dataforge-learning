@@ -16,7 +16,6 @@ const plan = [
   { tag: 'START HERE', tone: 'amber', name: 'Python foundations', area: 'Python', time: '20 min', reason: 'Begin your baseline' },
   { tag: 'START HERE', tone: 'teal', name: 'Warehouse concepts', area: 'Data Warehousing', time: '15 min', reason: 'Create your first edge' },
 ];
-const answers = ['Overwrite the existing row in place', 'Add a new dimension row and expire the previous row', 'Delete the customer and reload all facts', 'Store both addresses in a comma-separated column'];
 type SkillQuestion = { topic: string; difficulty: string; prompt: string; options: string[]; answer: number };
 const skillQuestions: SkillQuestion[] = [
   { topic: 'SQL', difficulty: 'Easy', prompt: 'Which SQL clause filters grouped results after aggregation?', options: ['WHERE', 'HAVING', 'ORDER BY', 'LIMIT'], answer: 1 },
